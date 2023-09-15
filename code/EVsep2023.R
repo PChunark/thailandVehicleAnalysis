@@ -3,6 +3,8 @@ library(scales)
 library(cowplot)
 library(grid)
 library(gridExtra)
+library(extrafont)
+library(extrafontdb)
 
 figures <- list()
 plotdata <- list()
