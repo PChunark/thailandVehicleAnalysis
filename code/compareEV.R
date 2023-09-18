@@ -251,7 +251,9 @@ blktitle <- theme(axis.title = element_blank(),
                   legend.position = "none")
 
 # Get legend
-p_legend1 <- gtable::gtable_filter(ggplotGrob(figures[["cumCompareSedanBEV"]]), 
+p_legend1 <- gtable::gtable_filter(ggplotGrob(figures[["cumCompareSedanBEV"]] + 
+                                                guides(shape = FALSE)+
+                                                guides(shape=guide_legend(ncol=2))+theme(legend.position="bottom")), 
                                    pattern = "guide-box")
 plot1 <-
   cowplot::plot_grid(figures$cumCompareSedanBEV+blktitle,
@@ -263,9 +265,17 @@ plot1 <-
                      ncol = 2,
                      labels = c("ก","ข","ค","ง","จ","ฉ"),
                      label_size = sz,
-                     label_fontfamily = text)
+                     label_fontfamily = text,
+                     align = "h")
 
-x.grob <- grid::textGrob("ค่าจริงจำนวนรถ BEV จดทะเบียนสะสม (คัน)",
+plot1 <-
+  cowplot::plot_grid(plot1,
+                     p_legend1,
+                     nrow = 2,
+                     rel_heights = c(1,.05)
+                     )
+
+x.grob <- grid::textGrob("ค่าสถิติจำนวนรถ BEV จดทะเบียนสะสม (คัน)",
                            gp=gpar(fontfamily = "Kanit", fontsize=15))
 y.grob <- grid::textGrob("ค่าพยากรณ์จำนวนรถ BEV จดทะเบียนสะสม (คัน)",
                          gp=gpar(fontfamily = "Kanit", fontsize=15), rot=90)
