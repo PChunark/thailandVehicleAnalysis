@@ -24,10 +24,14 @@ for (i in seq_along(file_paths)) {
   )
 }
 
+file_contents <- set_names(file_contents, file_paths)
 
-read_excel("rawdata/FuelNumofVehicleRegistered_Monthly/fuel28Feb23.xls",
-           sheet = 1, skip = 4)
+# 2 Purrr Map
 
-read_excel("rawdata/FuelNumofVehicleRegistered_Monthly/fuel28Feb23.xls",
-           sheet = 1, skip = 4)
-excel_sheets(file_paths[[1]])
+a<- 
+  file_paths %>% 
+  map(function (path){
+    read_excel(path, sheet = 1 , skip = 4)
+    
+  })
+
