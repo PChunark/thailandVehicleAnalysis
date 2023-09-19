@@ -145,7 +145,7 @@ plot<-
 plotdata <- c(plotdata, list("currentBEVTypeGrowth" = data))
 figures <- c(figures, list("currentBEVTypeGrowth" = plot))
 
-# Stacked addition BEV car ####
+# Stacked total BEV car and total BEV growth ####
 
 data <-
   read_excel("rawdata/01 EGAT_EV_เตรียมข้อมูลประชุม_Sep2023.xlsx",
@@ -163,43 +163,102 @@ data <-
   filter(year >= 2564 & year <= year(Sys.Date())+543)
 
 
-plotdata$compareTotalCurentForcastBEV %>%
+plot<-
+  plotdata$compareTotalCurentForcastBEV %>%
+  mutate(togo = forecast - current) %>% 
   pivot_longer(-thaBEV&-year, names_to = "type", values_to = "vehicle") %>%
+  filter(type != "forecast") %>% 
   mutate(type = fct_reorder(type,vehicle, .desc = TRUE)) %>% 
   ggplot()+
-  geom_col_pattern(aes(x = year, y = vehicle, pattern = type, fill = type),
-                   pattern_angle = 45,
-                   pattern_density = 0.2,
-                   pattern_spacing = 0.025,
-                   pattern_fill = "#4DAF4A")+
+  geom_col(aes(x = year, y = vehicle, fill = type))+
   geom_point(data = data %>% filter(thaBEV == "รวมทั้งหมด"), 
-             aes(x = year, y = growth*30000),
+             aes(x = year, y = growth*34000, color = "1"),
              size = 2.5,
-             shape = 21,
-             color = "salmon",
-             fill = "grey", inherit.aes = FALSE
+             shape = 15
              )+
-  geom_point(data = plotdata$growthCurentBEV %>% filter(thaBEV == "รวมทั้งหมด"& 
-                                                        year >= 2563),
-             aes(x = year, y = growth*30000),
+  geom_point(data = plotdata$growthCurentBEV %>% filter(thaBEV == "รวมทั้งหมด"&
+                                                          year >= 2563),
+             aes(x = year, y = growth*34000, color = "2"),
              size = 2.5,
-             shape = 5,
-             color = "salmon",
-             fill = "grey", inherit.aes = FALSE)+
+             shape = 17
+             )+
   scale_y_continuous(name = "จำนวนรถ BEV จดทะเบียนสะสม (คัน)",
                      breaks = seq(0,800000, 100000),
                      limits = c(0,800000),
                      labels = comma,
-                     sec.axis = sec_axis(~./300, 
-                                         name="การเติบโต (%)",
+                     sec.axis = sec_axis(~./340, 
+                                         name="อัตราเติบโต (%)",
+                                         breaks = seq(0,2400, 400),
                                          labels = label_number(big.mark = ",", suffix = "%")
-                                         ))+
-  scale_pattern_manual(name = NULL, values = c(current = "none", forecast = "stripe"))+
-  scale_fill_manual(values = c("#D9D9D9","#4DAF4A"))+
- 
+                     ))+
+  scale_fill_manual(name = "จำนวนรถ BEV", 
+                    labels = c("ค่าพยากรณ์",
+                               "ค่าสถิติ"),
+                    values = c("#D9D9D9","#4DAF4A"))+
+  scale_color_manual(name = "อัตราเติบโต", 
+                     limits = c("1", "2"), 
+                     labels = c("ค่าพยากรณ์",
+                                "ค่าสถิติ"),
+                     values = c("dodgerblue","red"))+
+  guides(colour = guide_legend(override.aes = list(pch = c(15,17))))+
+  ThemeLine+
+  theme(legend.position = "right")+
+  labs(x = NULL)
+
+plotdata <- c(plotdata, list("forecastBEVTypeGrowth" = data))
+figures <- c(figures, list("stackTotalBEVcurrentForecastGrowth" = plot))
+
+# Stacked addition BEV car and total BEV growth ####
+
+data <-
+read_excel("rawdata/01 EGAT_EV_เตรียมข้อมูลประชุม_Sep2023.xlsx",
+           sheet = "M3_BEV",
+           range = "O27:AF32", 
+           col_names = c(as.character(2563:2580))) %>% 
+  mutate(thaBEV = c("รถยนต์",
+                    "รถกระบะ (Van & Pick Up)",
+                    "รถ 2 และ 3 ล้อ",
+                    "รถบรรทุก",
+                    "รถบัส",
+                    "รวมทั้งหมด"),
+         .before = "2563") %>% 
+  pivot_longer(-thaBEV, names_to = "year", values_to = "vehicle") %>% 
+  filter(year == 2566,
+         thaBEV != "รวมทั้งหมด")
+
+
+
+data2<-
+  full_join(plotdata$currentBEVTypeGrowth,
+          data,
+          by = c("thaBEV" = "thaBEV",
+                 "year" = "year")) %>% 
+  select(year, thaBEV, "current" = vehicle.x, "forecast" = vehicle.y) %>% 
+  mutate(togo = forecast - current) %>% 
+  pivot_longer(-year & -thaBEV, names_to = "type", values_to = "vehicle")
+
+
+
+
+plot<-
+  data2 %>% filter(type != "forecast") %>%
+  mutate(type = fct_reorder(type,vehicle, .desc = TRUE),
+         thaBEV = fct_reorder(thaBEV,vehicle, .desc = FALSE)) %>% 
+  ggplot()+
+  geom_col(aes(x = thaBEV, y = vehicle, fill = type))+
+  geom_point(data = plotdata$forecastBEVTypeGrowth %>%  filter(year == 2566,thaBEV != "รวมทั้งหมด"),
+             aes(x = ))
+  scale_y_continuous(name = "จำนวนรถ BEV จดทะเบียนสะสม (คัน)",
+                     breaks = seq(0,400000, 100000),
+                     limits = c(0,400000),
+                     labels = comma,
+                     sec.axis = sec_axis(~./340, 
+                                         name="อัตราเติบโต (%)",
+                                         breaks = seq(0,2400, 400),
+                                         labels = label_number(big.mark = ",", suffix = "%")
+                     ))+
   ThemeLine+
   labs(x = NULL)
-  
 
 
 
@@ -230,12 +289,22 @@ plot1<-
                      nrow = 2,
                      rel_heights = c(1,.05))
   
+
+plot2 <-
+  cowplot::plot_grid(plot1,
+                     figures$stackTotalBEVcurrentForecastandGrowth+blktitle,
+                     nrow = 2,
+                     labels = c("","ค"),
+                     label_size = sz,
+                     label_fontfamily = text,
+                     align = "hv")
+  
 y.grob <- grid::textGrob("ค่าสถิติจำนวนรถ BEV จดทะเบียนสะสม (คัน)",
                          gp=gpar(fontfamily = "Kanit", fontsize=15), rot=90)
 ysec.grob <- grid::textGrob("อัตราการเติบโตต่อปี (%)",
                             gp=gpar(fontfamily = "Kanit", fontsize=15), rot=270)
 plot <-
-  gridExtra::grid.arrange(arrangeGrob(plot1, left = y.grob, right = ysec.grob))
+  gridExtra::grid.arrange(arrangeGrob(plot2, left = y.grob, right = ysec.grob))
 
 # save multiplots
 ggsave("figures/cumCompareBEV2.png",plot, width = 6, height = 6, units = "in")
