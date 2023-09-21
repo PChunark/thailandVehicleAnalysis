@@ -1,7 +1,11 @@
 # https://www.youtube.com/watch?v=AgWgPSZ7Gp0 ####
 library(tidyverse)
 
+# They used the vaccination in EU
+# EUVAX
 
+mapdata <- map_data("world")
+view(mapdata)
 
 # https://r-spatial.org/r/2018/10/25/ggplot2-sf.html ####
 
@@ -48,3 +52,46 @@ ggplot(data = world) +
 ggplot(data = world) +
   geom_sf() +
   coord_sf(xlim = c(-102.15, -74.12), ylim = c(7.65, 33.97), expand = FALSE)
+
+# https://www.youtube.com/watch?v=2k8O-Y_uiRU ####
+## https://mapping-in-r.netlify.app/ #####
+
+library(tidyverse)     # for data cleaning and plotting
+library(gardenR)       # for Lisa's garden data
+library(lubridate)     # for date manipulation
+library(openintro)     # for the abbr2state() function
+library(palmerpenguins)# for Palmer penguin data
+library(maps)          # for map data
+library(ggmap)         # for mapping points on maps
+library(gplots)        # for col2hex() function
+library(RColorBrewer)  # for color palettes
+library(sf)            # for working with spatial data
+library(leaflet)       # for highly customizable mapping
+library(ggthemes)      # for more themes (including theme_map())
+
+theme_set(theme_minimal())
+
+# Starbucks locations
+Starbucks <- read_csv("https://www.macalester.edu/~ajohns24/Data/Starbucks.csv")
+
+# ไม่ได้ใช้ google map 
+# ใช้ stamen map โดยดู  bbox จาก openstreet.com
+tha_map <-
+  get_stamenmap(
+    bbox = c(left = 97, bottom = 5.5, right = 110, top = 20.5),
+    maptype = "terrain",
+    zoom = 6
+  )
+
+ggmap(tha_map)+
+  geom_path(data = ,
+            aes(x = ,
+                y = ,))
+
+# http://www.gis2me.com/gcom/?cat=271&paged=2 ####
+## http://www.gis2me.com/gcom/?p=3239 ####
+
+library(leaflet)
+library(tidyverse)
+library(ggmap)
+library(leaflet.extras)
