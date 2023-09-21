@@ -92,7 +92,7 @@ plot<-
                      limits = c(0,100000),
                      labels = comma,
                      sec.axis = sec_axis(~./500, 
-                                         name="การเติบโต (%)",
+                                         name="อัตราเติบโต (% ต่อปี)",
                                          labels = label_number(suffix = "%"),
                                          breaks = seq(0,200,25)))+
   scale_fill_manual(values = linepalette1)+
@@ -134,7 +134,7 @@ plot<-
                      limits = c(0,60000),
                      labels = comma,
                      sec.axis = sec_axis(~./65, 
-                                         name="การเติบโต (%)",
+                                         name="อัตราเติบโต (% ต่อปี)",
                                          labels = label_number(suffix = "%"),
                                          breaks = seq(0,900,100)))+
     scale_fill_manual(values = c("#E41A1C","#4DAF4A","#FF7F00","#377EB8","#984EA3"))+
@@ -187,7 +187,7 @@ plot<-
                      limits = c(0,800000),
                      labels = comma,
                      sec.axis = sec_axis(~./340, 
-                                         name="อัตราเติบโต (%)",
+                                         name="อัตราเติบโต (% ต่อปี)",
                                          breaks = seq(0,2400, 400),
                                          labels = label_number(big.mark = ",", suffix = "%")
                      ))+
@@ -276,7 +276,7 @@ plot<-
                      limits = c(0,400000),
                      labels = comma,
                      sec.axis = sec_axis(~./450, 
-                                         name="อัตราเติบโต (%)",
+                                         name="อัตราเติบโต (% ต่อปี)",
                                          breaks = seq(0,900, 100),
                                          labels = label_number(big.mark = ",", suffix = "%")
                      ))+
@@ -401,7 +401,7 @@ plot<-
                      limits = c(0,700000),
                      labels = comma,
                      sec.axis = sec_axis(~./2, 
-                                         name="จำนวนรถ BEV ส่วนเพิ่ม (คัน)",
+                                         name="จำนวนรถ BEV ส่วนเพิ่ม (คันต่อปี)",
                                          breaks = seq(0,350000, 50000),
                                          labels = label_number(big.mark = ",")
                      ))+
@@ -466,7 +466,7 @@ plot<-
                      limits = c(0,400000),
                      labels = comma,
                      sec.axis = sec_axis(~./2, 
-                                         name="จำนวนรถ BEV ส่วนเพิ่ม (คัน)",
+                                         name="จำนวนรถ BEV ส่วนเพิ่ม (คันต่อปี)",
                                          breaks = seq(0,200000, 50000),
                                          labels = label_number(big.mark = ",")
                      ))+
@@ -479,16 +479,17 @@ figures <- c(figures, list("stackBEVTypeCurrentAndAdditionalBEV" = plot))
 
 # Mergeplot ####
 sz = 8
-blktitle <- theme(axis.title = element_blank(),
-                  axis.text.x = element_text(size = sz),
+blktitle <- theme(axis.text.x = element_text(size = sz),
                   axis.text.y = element_text(size = sz))
 
 # Get legend
 p_legend1 <- gtable::gtable_filter(ggplotGrob(figures[["stackedCurrent&GrowthBEV"]]),
                                    pattern = "guide-box")
 plot1 <-
-  cowplot::plot_grid(figures$"stackedCurrent&GrowthBEV"+blktitle + theme(legend.position = "none"),
-                     figures$currentBEVTypeGrowth+blktitle+theme(plot.title = element_blank()),
+  cowplot::plot_grid(figures$"stackedCurrent&GrowthBEV"+blktitle + theme(legend.position = "none",
+                                                                         axis.title = element_blank()),
+                     figures$currentBEVTypeGrowth+blktitle+theme(plot.title = element_blank(),
+                                                                 axis.title.y.left = element_blank()),
                      ncol = 2,
                      labels = c("ก","ข"),
                      label_size = sz,
@@ -501,17 +502,19 @@ plot1<-
                      nrow = 2,
                      rel_heights = c(1,.05))
 
-ysec.grob <- grid::textGrob("อัตราการเติบโตต่อปี (%)",
-                            gp=gpar(fontfamily = "Kanit", fontsize=15), rot=270)
-plot1<-
-  gridExtra::grid.arrange(arrangeGrob(plot1, right = ysec.grob))
+# ysec.grob <- grid::textGrob("อัตราการเติบโตต่อปี (%)",
+#                             gp=gpar(fontfamily = "Kanit", fontsize=15), rot=270)
+# plot1<-
+#   gridExtra::grid.arrange(arrangeGrob(plot1, right = ysec.grob))
 
 
 p_legend2 <- gtable::gtable_filter(ggplotGrob(figures[["stackBEVTypeCurrentForecastAndAdditionalBEV"]]),
                                    pattern = "guide-box")
 plot2 <-
-  cowplot::plot_grid(figures$stackBEVTypeCurrentForecastAndAdditionalBEV+blktitle+theme(legend.position = "none"),
-                     figures$stackBEVTypeCurrentAndAdditionalBEV+blktitle+theme(legend.position = "none"),
+  cowplot::plot_grid(figures$stackBEVTypeCurrentForecastAndAdditionalBEV+blktitle+theme(legend.position = "none",
+                                                                                        axis.title = element_blank()),
+                     figures$stackBEVTypeCurrentAndAdditionalBEV+blktitle+theme(legend.position = "none",
+                                                                                axis.title.y.left = element_blank()),
                      ncol = 2,
                      labels = c("ค","ง"),
                      label_size = sz,
@@ -523,10 +526,10 @@ plot2<-
                      nrow = 2,
                      rel_heights = c(1,.05))  
 
-ysec.grob <- grid::textGrob("จำนวนรถ BEV ส่วนเพิ่ม (คัน)",
-                            gp=gpar(fontfamily = "Kanit", fontsize=15), rot=270)
-plot2<-
-  gridExtra::grid.arrange(arrangeGrob(plot2, right = ysec.grob))
+# ysec.grob <- grid::textGrob("จำนวนรถ BEV ส่วนเพิ่ม (คัน)",
+                            # gp=gpar(fontfamily = "Kanit", fontsize=15), rot=270)
+# plot2<-
+  # gridExtra::grid.arrange(arrangeGrob(plot2, right = ysec.grob))
 
 plot <-
   cowplot::plot_grid(plot1,

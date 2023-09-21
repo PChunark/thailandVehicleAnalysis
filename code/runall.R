@@ -8,5 +8,5 @@ source("code/EVsep2023.R")
 # Comparing collected data with forecast EV 
 source("code/compareEV.R")
 
-#Comparing current, forecast growth
-# source("code/totBEVandGrowth.R")
+# Comparing current, forecast growth
+source("code/totBEVandGrowth.R")
