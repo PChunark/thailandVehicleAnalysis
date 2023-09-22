@@ -118,4 +118,97 @@ tcji %>%
   geom_polygon(color = "black")+
   coord_map("polyconic")
 
-# อาจารย์ TU EP2 
+# อาจารย์ TU EP2 https://www.youtube.com/watch?v=MsMeDf6CALY&list=PLCHOThJWrXeWAmnWISeKulpLYAP_NuHJB&index=2 ####
+
+## Call global map using leaflet library ####
+leaflet() %>% addTiles()
+names(providers) # list map providers
+# test map type
+leaflet() %>% addProviderTiles("Esri")
+leaflet() %>% addProviderTiles("Wikimedia")
+leaflet() %>% addProviderTiles("NASAGIBS.ViirsEarthAtNight2012")
+leaflet() %>% addProviderTiles("TomTom.Basic")
+leaflet() %>% addProviderTiles("HERE.basicMap")
+leaflet() %>% addProviderTiles("OpenTopoMap")
+
+# Location ตึก ท100
+leaflet() %>% addProviderTiles("Esri.WorldStreetMap") %>% 
+  setView(lng = 100.50551995044027, lat = 13.811329944624301,
+          zoom = 16) %>% 
+  addMarkers(lng = 100.50551995044027, lat = 13.811329944624301)
+
+leaflet() %>% addProviderTiles("Esri.WorldStreetMap") %>% 
+  setView(lng = 100.50551995044027, lat = 13.811329944624301,
+          zoom = 16) %>% 
+  addCircleMarkers(lng = 100.50551995044027, 
+                   lat = 13.811329944624301,
+                   radius = 4,
+                   color = "red")
+
+# อาจรย์ TU EP3 https://www.youtube.com/watch?v=gh8VMFUv91o ####
+
+## Set map option ####
+leaflet() %>% 
+  addProviderTiles("OpenStreetMap.Mapnik", group = "Streets") %>%
+  addProviderTiles("Esri", group = "Imagery") %>% 
+  addProviderTiles("OpenTopoMap", group = "Topomap") %>% 
+  addLayersControl(baseGroups = c("Streets", "Topomap","Imagery"),
+                   options = layersControlOptions(collapsed = F, autoZIndex = T)) %>%
+  addMarkers(lng = 100.50551995044027, lat = 13.811329944624301) %>% 
+  setView(lng = 100.50551995044027, lat = 13.811329944624301,
+          zoom = 16)
+
+## Fix zoom option ####
+leaflet() %>% 
+  addProviderTiles("OpenStreetMap.Mapnik", 
+                   group = "Streets", 
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>%
+  addProviderTiles("Esri", 
+                   group = "Imagery",
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>% 
+  addProviderTiles("OpenTopoMap", 
+                   group = "Topomap",
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>% 
+  addLayersControl(baseGroups = c("Streets", "Topomap","Imagery"),
+                   options = layersControlOptions(collapsed = F, autoZIndex = T)) %>%
+  addMarkers(lng = 100.50551995044027, lat = 13.811329944624301) %>% 
+  setView(lng = 100.50551995044027, lat = 13.811329944624301,
+          zoom = 16)
+
+## Hide/show layer control option ####
+# options = layersControlOptions(collapsed = T
+leaflet() %>% 
+  addProviderTiles("OpenStreetMap.Mapnik", 
+                   group = "Streets", 
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>%
+  addProviderTiles("Esri", 
+                   group = "Imagery",
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>% 
+  addProviderTiles("OpenTopoMap", 
+                   group = "Topomap",
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>% 
+  addLayersControl(baseGroups = c("Streets", "Topomap","Imagery"),
+                   options = layersControlOptions(collapsed = T, autoZIndex = T)) %>%
+  addMarkers(lng = 100.50551995044027, lat = 13.811329944624301) %>% 
+  setView(lng = 100.50551995044027, lat = 13.811329944624301,
+          zoom = 16)
+
+## Search ---addSearchOSM() #####
+library(leaflet.extras)
+
+leaflet() %>% 
+  addProviderTiles("OpenStreetMap.Mapnik", 
+                   group = "Streets", 
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>%
+  addProviderTiles("Esri", 
+                   group = "Imagery",
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>% 
+  addProviderTiles("OpenTopoMap", 
+                   group = "Topomap",
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>% 
+  addSearchOSM() %>% 
+  addLayersControl(baseGroups = c("Streets", "Topomap","Imagery"),
+                   options = layersControlOptions(collapsed = T, autoZIndex = T)) %>%
+  addMarkers(lng = 100.50551995044027, lat = 13.811329944624301) %>% 
+  setView(lng = 100.50551995044027, lat = 13.811329944624301,
+          zoom = 16)
