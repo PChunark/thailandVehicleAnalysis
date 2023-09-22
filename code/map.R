@@ -145,7 +145,7 @@ leaflet() %>% addProviderTiles("Esri.WorldStreetMap") %>%
                    radius = 4,
                    color = "red")
 
-# อาจรย์ TU EP3 https://www.youtube.com/watch?v=gh8VMFUv91o ####
+# อาจารย์ TU EP3 https://www.youtube.com/watch?v=gh8VMFUv91o ####
 
 ## Set map option ####
 leaflet() %>% 
@@ -212,3 +212,101 @@ leaflet() %>%
   addMarkers(lng = 100.50551995044027, lat = 13.811329944624301) %>% 
   setView(lng = 100.50551995044027, lat = 13.811329944624301,
           zoom = 16)
+
+# อาจารย์ TU EP4 https://www.youtube.com/watch?v=6XX-niZs8DI&list=PLCHOThJWrXeWAmnWISeKulpLYAP_NuHJB&index=4 ####
+library(leaflet)
+library(leaflet.extras)
+
+leaflet() %>% 
+  addProviderTiles("OpenStreetMap.Mapnik", 
+                   group = "Streets", 
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>%
+  addProviderTiles("Esri", 
+                   group = "Imagery",
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>% 
+  addProviderTiles("OpenTopoMap", 
+                   group = "Topomap",
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>% 
+  addSearchOSM() %>% 
+  addLayersControl(baseGroups = c("Streets", "Topomap","Imagery"),
+                   options = layersControlOptions(collapsed = T, autoZIndex = T)) %>%
+  addMarkers(lng = 100.50551995044027, lat = 13.811329944624301) %>% 
+  setView(lng = 100.50551995044027, lat = 13.811329944624301,
+          zoom = 16)
+## Reading Shapefile -- library(raster) ####
+library(raster)
+library(widgetframe)
+library(htmltools)
+
+basinmap0 <- shapefile("rawdata/tha_adm_rtsd_itos_20210121_shp/tha_admbnda_adm0_rtsd_20220121.shp")
+view(basinmap0)
+
+basinmap <- shapefile("rawdata/tha_adm_rtsd_itos_20210121_shp/tha_admbnda_adm1_rtsd_20220121.shp")
+view(basinmap)
+
+basinmap2 <- shapefile("rawdata/tha_adm_rtsd_itos_20210121_shp/tha_admbnda_adm2_rtsd_20220121.shp")
+view(basinmap2)
+
+basinmap3 <- shapefile("rawdata/tha_adm_rtsd_itos_20210121_shp/tha_admbnda_adm3_rtsd_20220121.shp")
+view(basinmap3)
+
+basinmap %>% 
+leaflet() %>% 
+  addProviderTiles("OpenStreetMap.Mapnik", 
+                   group = "Streets", 
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>%
+  addProviderTiles("Esri", 
+                   group = "Imagery",
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>% 
+  addProviderTiles("OpenTopoMap", 
+                   group = "Topomap",
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>% 
+  addPolygons(label = ~htmlEscape(ADM1_EN),
+              color = "#444444",
+              weight = 1,
+              smoothFactor = 0.5,
+              opacity = 1.0,
+              fillOpacity = 0.5,
+              highlightOptions = highlightOptions(color = "white",
+                                                  weight = 2,
+                                                  bringToFront = T)) %>% 
+  addSearchOSM() %>% 
+  addLayersControl(baseGroups = c("Streets", "Topomap","Imagery"),
+                   options = layersControlOptions(collapsed = T, autoZIndex = T)) %>%
+  addMarkers(lng = 100.50551995044027, lat = 13.811329944624301) %>% 
+  setView(lng = 100.50551995044027, lat = 13.811329944624301,
+          zoom = 16)
+
+## Add layer control in option ####
+basinmap %>% 
+  leaflet() %>% 
+  addProviderTiles("OpenStreetMap.Mapnik", 
+                   group = "Streets", 
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>%
+  addProviderTiles("Esri", 
+                   group = "Imagery",
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>% 
+  addProviderTiles("OpenTopoMap", 
+                   group = "Topomap",
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>% 
+  addPolygons(label = ~htmlEscape(ADM1_EN),
+              color = "#444444",
+              weight = 1,
+              smoothFactor = 0.5,
+              opacity = 1.0,
+              fillOpacity = 0.5,
+              group = "Province",
+              highlightOptions = highlightOptions(color = "white",
+                                                  weight = 2,
+                                                  bringToFront = T)) %>% 
+  addSearchOSM() %>% 
+  addLayersControl(baseGroups = c("Streets", "Topomap","Imagery"),
+                   overlayGroups = c("Province"),
+                   options = layersControlOptions(collapsed = T, autoZIndex = T)) %>%
+  addMarkers(lng = 100.50551995044027, lat = 13.811329944624301) %>% 
+  setView(lng = 100.50551995044027, lat = 13.811329944624301,
+          zoom = 16)
+
+## Symbology ####
+bin <- c(0,10,20,30)
+
