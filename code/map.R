@@ -88,10 +88,34 @@ ggmap(tha_map)+
             aes(x = ,
                 y = ,))
 
-# http://www.gis2me.com/gcom/?cat=271&paged=2 ####
+# อาจารย์ TU EP1 http://www.gis2me.com/gcom/?cat=271&paged=2 ####
 ## http://www.gis2me.com/gcom/?p=3239 ####
 
 library(leaflet)
 library(tidyverse)
 library(ggmap)
 library(leaflet.extras)
+library(htmltools)
+library(maps)
+library(mapproj)
+library(mapdata)
+
+w <- map_data("world")
+tcji <- map_data("world",
+                 region = c("Thailand", "China", "Japan", "India"))
+
+tcji %>% 
+  ggplot(aes(x = long, y = lat, group = group))+
+  geom_polygon(color = "black")
+
+tcji %>% 
+  ggplot(aes(x = long, y = lat, group = group, fill = region))+
+  geom_polygon(color = "black")
+
+# draw coordinate world map
+tcji %>% 
+  ggplot(aes(x = long, y = lat, group = group, fill = region))+
+  geom_polygon(color = "black")+
+  coord_map("polyconic")
+
+# อาจารย์ TU EP2 
