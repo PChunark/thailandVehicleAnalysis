@@ -237,18 +237,20 @@ leaflet() %>%
 library(raster)
 library(widgetframe)
 library(htmltools)
+library(sf)
+library(tmap)
 
-basinmap0 <- shapefile("rawdata/tha_adm_rtsd_itos_20210121_shp/tha_admbnda_adm0_rtsd_20220121.shp")
-view(basinmap0)
 
-basinmap <- shapefile("rawdata/tha_adm_rtsd_itos_20210121_shp/tha_admbnda_adm1_rtsd_20220121.shp")
-view(basinmap)
-
-basinmap2 <- shapefile("rawdata/tha_adm_rtsd_itos_20210121_shp/tha_admbnda_adm2_rtsd_20220121.shp")
-view(basinmap2)
-
-basinmap3 <- shapefile("rawdata/tha_adm_rtsd_itos_20210121_shp/tha_admbnda_adm3_rtsd_20220121.shp")
-view(basinmap3)
+tha_map <-
+  st_read(dsn = "rawdata/tha_adm_rtsd_itos_20210121_shp/tha_admbnda_adm1_rtsd_20220121.shp") %>% 
+  as_tibble() %>% 
+  separate(ADM1_PCODE, into = c("pcode_text", "pcode_num"), sep = "(?<=[A-Za-z])(?=[0-9])") %>%
+  mutate(pcode_num = as.numeric(pcode_num)) %>% 
+  # select(geometry, pcode_num)
+  st_as_sf()
+  
+basinmap<-
+  shapefile("rawdata/basin2/basin2.shp")
 
 basinmap %>% 
 leaflet() %>% 
@@ -261,7 +263,7 @@ leaflet() %>%
   addProviderTiles("OpenTopoMap", 
                    group = "Topomap",
                    options = tileOptions(minZoom = 4, maxZoom = 15)) %>% 
-  addPolygons(label = ~htmlEscape(ADM1_EN),
+  addPolygons(label = ~htmlEscape(BASIN_ID),
               color = "#444444",
               weight = 1,
               smoothFactor = 0.5,
@@ -289,7 +291,43 @@ basinmap %>%
   addProviderTiles("OpenTopoMap", 
                    group = "Topomap",
                    options = tileOptions(minZoom = 4, maxZoom = 15)) %>% 
+  addPolygons(label = ~htmlEscape(BASIN_ID),
+              color = "#444444",
+              weight = 1,
+              smoothFactor = 0.5,
+              opacity = 1.0,
+              fillOpacity = 0.5,
+              group = "Basin",
+              highlightOptions = highlightOptions(color = "white",
+                                                  weight = 2,
+                                                  bringToFront = T)) %>% 
+  addSearchOSM() %>% 
+  addLayersControl(baseGroups = c("Streets", "Topomap","Imagery"),
+                   overlayGroups = c("Basin"),
+                   options = layersControlOptions(collapsed = T, autoZIndex = T)) %>%
+  addMarkers(lng = 100.50551995044027, lat = 13.811329944624301) %>% 
+  setView(lng = 100.50551995044027, lat = 13.811329944624301,
+          zoom = 16)
+
+## Symbology ####
+bins <- seq(10,100,10)
+pal <- colorBin("Set3", domain = tha_map$pcode_num, bins = bins)
+
+
+tha_map %>%
+  # separate(ADM1_PCODE, into = c("pcode_text", "pcode_num"), sep = "(?<=[A-Za-z])(?=[0-9])")
+  leaflet() %>% 
+  addProviderTiles("OpenStreetMap.Mapnik", 
+                   group = "Streets", 
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>%
+  addProviderTiles("Esri", 
+                   group = "Imagery",
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>% 
+  addProviderTiles("OpenTopoMap", 
+                   group = "Topomap",
+                   options = tileOptions(minZoom = 4, maxZoom = 15)) %>% 
   addPolygons(label = ~htmlEscape(ADM1_EN),
+              fillColor = ~pal(pcode_num),
               color = "#444444",
               weight = 1,
               smoothFactor = 0.5,
@@ -307,6 +345,4 @@ basinmap %>%
   setView(lng = 100.50551995044027, lat = 13.811329944624301,
           zoom = 16)
 
-## Symbology ####
-bin <- c(0,10,20,30)
 
