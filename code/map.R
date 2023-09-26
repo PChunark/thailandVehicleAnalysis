@@ -345,4 +345,30 @@ tha_map %>%
   setView(lng = 100.50551995044027, lat = 13.811329944624301,
           zoom = 16)
 
+# อาจารย์ TU EP5 https://www.youtube.com/watch?v=bl338EyBTgU&list=PLCHOThJWrXeWAmnWISeKulpLYAP_NuHJB&index=5####
+# การนำเข้าจุด point จาก excel
 
+library(leaflet)
+library(leaflet.extras)
+library(raster) # Reading shape file
+library(widgetframe)
+library(htmltools)
+
+## Display leaflet map original based map ####
+
+leaflet() %>% 
+  addProviderTiles("OpenStreetMap.Mapnik", group = "Streets") %>%
+  addProviderTiles("Esri", group = "Imagery") %>% 
+  addProviderTiles("OpenTopoMap", group = "Topomap") %>% 
+  addLayersControl(baseGroups = c("Streets", "Topomap","Imagery"),
+                   options = layersControlOptions(collapsed = F, autoZIndex = T)) %>%
+  addMarkers(lng = 100.50551995044027, lat = 13.811329944624301) %>% 
+  setView(lng = 100.50551995044027, lat = 13.811329944624301,
+          zoom = 16)
+
+## Reading excel ####
+library(readxl)
+
+read_excel("rawdata/TH_COVID_REPORT/TH_COVID_import.xls",
+           sheet = "raw",
+           range = "A1:L3011")
