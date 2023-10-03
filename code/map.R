@@ -368,30 +368,6 @@ leaflet() %>%
 
 ## Reading excel ####
 library(readxl)
-<<<<<<< HEAD
-covidTH<- read_excel("rawdata/TH_COVID_REPORT/TH_COVID_import.xls",
-           sheet = "raw",
-           range = "A1:L3011")
-covidTH
-str(covidTH)
-summary(covidTH)
-View(covidTH)
-fix(covidTH) #Edit information in table
-
-## Filter ####
-library(tidyverse)
-covidMap <-
-  covidTH %>% filter(NationEn == "Thai")
-view(covidMap)
-
-covidMap <-
-  covidMap %>% group_by(ProvinceEn) %>% 
-    summarise(count = n()) %>% 
-    arrange(desc(count))
-
-view(covidMap)  
-=======
-
 covidTh <-
   read_excel("rawdata/TH_COVID_REPORT/TH_COVID_import.xls",
            sheet = "raw",
@@ -402,7 +378,7 @@ summary(covidTh)
 # View(covidTh)
 fix(covidTh) # for edit data frame directly in R
 
-# for filter -- use library(tidyverse)
+## For filter -- use library(tidyverse) ####
 
 library(tidyverse)
 
@@ -435,4 +411,25 @@ data <-
 
 data2<-  full_join(covidMap,thgps, by = c("ProvinceEn" = "PROVINCE_E"))
   
->>>>>>> 8112795296b763ea12974147004a87e8a8cf170f
+names(data)
+reports <-
+  sort(table(data$ProvinceEn), decreasing = T)
+
+row.names(reports[1:10])
+
+covidMap2 <-
+  leaflet() %>% 
+  addProviderTiles("OpenStreetMap.Mapnik", group = "Streets") %>%
+  addProviderTiles("Esri", group = "Imagery") %>% 
+  addProviderTiles("OpenTopoMap", group = "Topomap") %>% 
+  addLayersControl(baseGroups = c("Streets", "Topomap","Imagery"),
+                   options = layersControlOptions(collapsed = F, autoZIndex = T)) %>%
+  setView(lng = 100.50551995044027, lat = 13.811329944624301,
+          zoom = 10)
+covidMap2
+
+## Add circle marker ####
+covidMap2 %>% addCircleMarkers(data = data, popup = data$count, radius = 3)
+
+## Change color by province ####
+library(RColorBrewer)
