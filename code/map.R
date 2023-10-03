@@ -369,6 +369,46 @@ leaflet() %>%
 ## Reading excel ####
 library(readxl)
 
-read_excel("rawdata/TH_COVID_REPORT/TH_COVID_import.xls",
+covidTh <-
+  read_excel("rawdata/TH_COVID_REPORT/TH_COVID_import.xls",
            sheet = "raw",
            range = "A1:L3011")
+covidTh
+str(covidTh) # See the structure of a data frame
+summary(covidTh)
+# View(covidTh)
+fix(covidTh) # for edit data frame directly in R
+
+# for filter -- use library(tidyverse)
+
+library(tidyverse)
+
+covidMap <-
+  covidTh %>% 
+  filter(NationEn == "Thai") 
+covidMap  
+
+covidMap <-
+  covidMap %>% 
+  group_by(ProvinceEn) %>% 
+  summarise(count = n()) %>% 
+  arrange(desc(count))
+covidMap$ProvinceEn <- tolower(covidMap$ProvinceEn)
+summary(covidMap)
+
+thgps <-
+  read_excel("rawdata/TH_COVID_REPORT/TH_COVID_import.xls",
+             sheet = "gps")
+thgps
+
+#Change font to lower
+thgps$PROVINCE_E <- tolower(thgps$PROVINCE_E)
+
+# These techniques can be used for binding the dataframe
+data <-
+  merge(covidMap, thgps,
+        by.x = "ProvinceEn",
+        by.y = "PROVINCE_E")
+
+data2<-  full_join(covidMap,thgps, by = c("ProvinceEn" = "PROVINCE_E"))
+  
