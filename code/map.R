@@ -368,7 +368,24 @@ leaflet() %>%
 
 ## Reading excel ####
 library(readxl)
-
-read_excel("rawdata/TH_COVID_REPORT/TH_COVID_import.xls",
+covidTH<- read_excel("rawdata/TH_COVID_REPORT/TH_COVID_import.xls",
            sheet = "raw",
            range = "A1:L3011")
+covidTH
+str(covidTH)
+summary(covidTH)
+View(covidTH)
+fix(covidTH) #Edit information in table
+
+## Filter ####
+library(tidyverse)
+covidMap <-
+  covidTH %>% filter(NationEn == "Thai")
+view(covidMap)
+
+covidMap <-
+  covidMap %>% group_by(ProvinceEn) %>% 
+    summarise(count = n()) %>% 
+    arrange(desc(count))
+
+view(covidMap)  
