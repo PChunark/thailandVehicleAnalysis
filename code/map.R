@@ -413,7 +413,7 @@ data2<-  full_join(covidMap,thgps, by = c("ProvinceEn" = "PROVINCE_E"))
   
 names(data)
 reports <-
-  sort(table(data$ProvinceEn), decreasing = T)
+  sort(table(data$ProvinceEn), decreasing = T) # Techinique for sorting data
 
 row.names(reports[1:10])
 
@@ -433,3 +433,31 @@ covidMap2 %>% addCircleMarkers(data = data, popup = data$count, radius = 3)
 
 ## Change color by province ####
 library(RColorBrewer)
+cols <- brewer.pal(10, name = "Spectral") # assign the set color name
+covid.col <- colorFactor(cols,
+                         domain = data$ProvinceEn) # Change color by ProvinceEn
+
+covidMap2 %>% addCircleMarkers(data = data, 
+                               popup = data$ProvinceEn, 
+                               color = covid.col(data$ProvinceEn),
+                               group = "COVID-19",
+                               radius = 3)
+covidMap3 <- 
+  covidMap2 %>% addCircleMarkers(data = data, 
+                                 popup = data$ProvinceEn, 
+                                 color = covid.col(data$ProvinceEn),
+                                 group = "COVID-19",
+                                 radius = 10,
+                                 clusterOptions = T) # Cluster data until we zoom in 
+covidMap3
+
+covidMap4 <-
+covidMap3 %>% 
+  addProviderTiles("OpenStreetMap.Mapnik", group = "Streets") %>%
+  addProviderTiles("Esri", group = "Imagery") %>% 
+  addProviderTiles("OpenTopoMap", group = "Topomap") %>% 
+  addLayersControl(baseGroups = c("Streets", "Topomap","Imagery"),
+                   overlayGroups = c("COVID-19"),
+                   options = layersControlOptions(collapsed = F, autoZIndex = T)) %>%
+  setView(lng = 100.50551995044027, lat = 13.811329944624301,
+          zoom = 10)
