@@ -30,8 +30,31 @@ file_contents <- set_names(file_contents, file_paths)
 
 a<- 
   file_paths %>% 
-  map(function (path){
-    read_excel(path, sheet = 1 , skip = 4)
+  map(function (file_paths){
+    read_excel(file_paths, sheet = 1 , skip = 4)
     
   })
 
+# test load data
+files <- list.files(path = "rawdata/FuelNumofVehicleRegistered_Monthly/", full.names = TRUE, pattern = ".xls")
+# Write a reading function
+read_excel_file <- function(file) {
+  if(is.na(file)) stop("No file path") # TEST if path exists
+  
+  df <- readxl::read_excel(file, skip = 4)
+  # add data cleaning / validation
+  df
+}
+
+# test first excel file
+read_excel_file(file = files[1])
+
+# loop to read all excel files data
+df_list <- purrr::map(.x = files, .f = read_excel_file)
+
+file_paths %>% 
+  map(function(file){ 
+    map(excel_sheets(file), 
+        function(sheet) {read_xlsx(file, sheet)})
+    
+    })
