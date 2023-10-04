@@ -461,3 +461,25 @@ covidMap3 %>%
                    options = layersControlOptions(collapsed = F, autoZIndex = T)) %>%
   setView(lng = 100.50551995044027, lat = 13.811329944624301,
           zoom = 10)
+
+# อาจารย์ TU EP6 https://www.youtube.com/watch?v=j8khRmVSsbA&list=PLCHOThJWrXeWAmnWISeKulpLYAP_NuHJB&index=7 ####
+# ทำแผนที่ polygon เป็น layer
+
+library(leaflet)
+library(leaflet.extras)
+
+leaflet() %>% 
+  addProviderTiles("OpenStreetMap.Mapnik", group = "Streets") %>%
+  addProviderTiles("Esri", group = "Imagery") %>% 
+  addProviderTiles("OpenTopoMap", group = "Topomap") %>% 
+  addLayersControl(baseGroups = c("Streets", "Topomap","Imagery"),
+                   options = layersControlOptions(collapsed = F, autoZIndex = T)) %>%
+  setView(lng = 100.50551995044027, lat = 13.811329944624301,
+          zoom = 10)
+
+library(raster)
+library(widgetframe)
+library(htmltools)
+
+basinmap<-
+  shapefile("rawdata/basin2/basin2.shp")
