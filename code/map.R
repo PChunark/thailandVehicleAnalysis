@@ -467,6 +467,7 @@ covidMap3 %>%
 
 library(leaflet)
 library(leaflet.extras)
+library(sf)
 
 leaflet() %>% 
   addProviderTiles("OpenStreetMap.Mapnik", group = "Streets") %>%
@@ -477,9 +478,51 @@ leaflet() %>%
   setView(lng = 100.50551995044027, lat = 13.811329944624301,
           zoom = 10)
 
-library(raster)
+library(raster) # reading shape file
 library(widgetframe)
 library(htmltools)
 
+## Load shape file ####
 basinmap<-
   shapefile("rawdata/basin2/basin2.shp")
+
+tha_map <-
+  st_read(dsn = "rawdata/tha_adm_rtsd_itos_20210121_shp/tha_admbnda_adm1_rtsd_20220121.shp") %>% 
+  as_tibble() %>% 
+  separate(ADM1_PCODE, into = c("pcode_text", "pcode_num"), sep = "(?<=[A-Za-z])(?=[0-9])") %>%
+  mutate(pcode_num = as.numeric(pcode_num)) %>% 
+  # select(geometry, pcode_num)
+  st_as_sf()
+
+## 01 Basin MAp ####
+# Symbology 
+bins <- c(0,2,4,6,8,10,12,14,16,Inf)
+pal <- colorBin("Set3", domain = basinmap$BASIN_ID, bins = bins)
+
+map01<-
+  leaflet(data = basinmap) %>% 
+  addProviderTiles("OpenStreetMap.Mapnik", options = tileOptions(minZoom = 3, maxZoom = 17),group = "Streets") %>%
+  addProviderTiles("Esri", options = tileOptions(minZoom = 3, maxZoom = 17), group = "Imagery") %>% 
+  addProviderTiles("OpenTopoMap", options = tileOptions(minZoom = 3, maxZoom = 17), group = "Topomap") %>% 
+  addPolygons(label = ~htmlEscape(NAME_E), #hover mouse and shows basin name in English 
+              fillColor = ~pal(BASIN_ID),
+              color = "#444444",
+              weight = 1,
+              smoothFactor = 0.5,
+              opacity = 1,
+              fillOpacity = 0.5,
+              group = "BASIN",
+              highlightOptions = highlightOptions(color = "white", # highlight when hover mouse on basin
+                                                  weight = 2,
+                                                  bringToFront = TRUE)) %>% 
+  addSearchOSM() %>% 
+  addLayersControl(baseGroups = c("Streets", "TopoMap", "Imagery"),
+                   overlayGroups = "BASIN",
+                   options = layersControlOptions(collapsed = F, 
+                                                  autoZIndex = T)) %>% 
+  setView(lng = 100.50551995044027, lat = 13.811329944624301,
+          zoom = 10)
+
+map01
+
+## 02 Thaimap ####
