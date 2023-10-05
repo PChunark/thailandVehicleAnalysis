@@ -58,3 +58,17 @@ file_paths %>%
         function(sheet) {read_xlsx(file, sheet)})
     
     })
+
+
+
+a <- 
+map(file_paths,
+    function(file){
+      map(excel_sheets(file),
+          function(sheet){
+            read_excel(file,
+                       sheet, 
+                       # range = "A1:N52",
+                       skip = 4) 
+          })
+    })
