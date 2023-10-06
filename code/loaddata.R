@@ -1,6 +1,7 @@
 library("stringr")
 library("purrr")
 library("readxl")
+library("tidyverse")
 
 files <- list.files(path = "rawdata/FuelNumofVehicleRegistered_Monthly/", pattern = ".xls")
 files <- stringr::str_c("rawdata/FuelNumofVehicleRegistered_Monthly/", files)
@@ -14,52 +15,8 @@ library(fs)
 file_paths <- fs::dir_ls("rawdata/FuelNumofVehicleRegistered_Monthly")
 file_paths[[1]]
 
-# 1 for loop
-
-file_contents <- list()
-
-for (i in seq_along(file_paths)) {
-  file_contents[[i]] <- read_excel(
-    file_paths[[i]],sheet = 1, skip = 4
-  )
-}
-
-file_contents <- set_names(file_contents, file_paths)
 
 # 2 Purrr Map
-
-a<- 
-  file_paths %>% 
-  map(function (file_paths){
-    read_excel(file_paths, sheet = 1 , skip = 4)
-    
-  })
-
-# test load data
-files <- list.files(path = "rawdata/FuelNumofVehicleRegistered_Monthly/", full.names = TRUE, pattern = ".xls")
-# Write a reading function
-read_excel_file <- function(file) {
-  if(is.na(file)) stop("No file path") # TEST if path exists
-  
-  df <- readxl::read_excel(file, skip = 4)
-  # add data cleaning / validation
-  df
-}
-
-# test first excel file
-read_excel_file(file = files[1])
-
-# loop to read all excel files data
-df_list <- purrr::map(.x = files, .f = read_excel_file)
-
-file_paths %>% 
-  map(function(file){ 
-    map(excel_sheets(file), 
-        function(sheet) {read_xlsx(file, sheet)})
-    
-    })
-
-
 
 a <- 
 map(file_paths,
@@ -72,3 +29,50 @@ map(file_paths,
                        skip = 4) 
           })
     })
+
+seq_along(excel_sheets(file_paths[[1]]))
+set_names(file_paths, excel_sheets(file_paths[[1]]))
+
+b <- 
+  map(file_paths,
+      function(file){
+        map(excel_sheets(file),
+            function(sheet){
+              map(set_names(sheet),
+                  function(sheet1){
+                     read_excel(file,
+                                sheet1, 
+                              # range = "A1:N52",
+                                skip = 4) %>% 
+                      pivot_longer(-ประเภทรถ,
+                                   names_to ="category", 
+                                   values_to = "unit") %>% 
+                      filter(category == "ไฟฟ้า")
+                    
+                  })
+            })
+      })
+
+sss <- data.frame(excel_sheets(file_paths[1]))
+c<-
+  file_paths %>% 
+  map(function (path){
+    read_excel(path, 
+               skip = 4) %>% 
+      set_names(., 
+                nm = map(.x = .,
+                         ~excel_sheets(file_paths[1])))
+      
+  })
+  
+# https://www.r4epi.com/using-the-purrr-package
+d<- map(.x = excel_sheets(as.character(file_paths[1])),
+     .f = function(x){
+       new_nm <- tolower(x)
+       assign(new_nm, read_excel(as.character(file_paths[1]), sheet = x, skip = 4), envir = .GlobalEnv)
+     })
+
+e <- map(
+  .x = excel_sheets(as.character(file_paths[1])),
+  .f = ~ read_excel(as.character(file_paths[1]), sheet = .x, skip = 4)
+)
