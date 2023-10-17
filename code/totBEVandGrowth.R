@@ -121,7 +121,7 @@ plot<-
                  y = vehicle, fill = thaBEV), position = "dodge",
              show.legend = FALSE)+
     geom_point(data = data2,
-               aes(x = reorder(thaBEV, growth), y = growth*6500),
+               aes(x = reorder(thaBEV, growth), y = growth*7000),
                size = 2.5,
                shape = 21,
                color = "salmon",
@@ -130,13 +130,13 @@ plot<-
     theme(plot.title = element_textbox_simple(margin = margin(b = 10)),
           plot.title.position = "plot")+
   scale_y_continuous(name = "จำนวนรถ BEV จดทะเบียนสะสม (คัน)",
-                     breaks = seq(0,60000, 10000),
-                     limits = c(0,60000),
+                     breaks = seq(0,70000, 10000),
+                     limits = c(0,70000),
                      labels = comma,
-                     sec.axis = sec_axis(~./65, 
+                     sec.axis = sec_axis(~./70, 
                                          name="อัตราเติบโต (% ต่อปี)",
                                          labels = label_number(suffix = "%"),
-                                         breaks = seq(0,900,100)))+
+                                         breaks = seq(0,1000,100)))+
     scale_fill_manual(values = c("#E41A1C","#4DAF4A","#FF7F00","#377EB8","#984EA3"))+
   labs(x = NULL,
        title = glue("สถิติรถ BEV จดทะเบียนสะสม ณ <span style='color:dodgerblue'> 
