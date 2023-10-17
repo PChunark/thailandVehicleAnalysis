@@ -34,8 +34,8 @@ plot <-
              scales = "free_y")+
   ThemeLine+
   theme(strip.text.x = element_text(size = 12))+
-  scale_y_continuous(breaks = seq(0,60000, 10000),
-                     limits = c(0,60000),
+  scale_y_continuous(breaks = seq(0,70000, 10000),
+                     limits = c(0,70000),
                       labels = comma)+
   scale_color_manual(values = linepalette1)+
   labs(x = NULL,
