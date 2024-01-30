@@ -526,3 +526,26 @@ map01<-
 map01
 
 ## 02 Thaimap ####
+
+bins2 <- c(0, 10, 20, 30, 40, 50, 60, 70, Inf)
+pal2 <- colorBin("Set3", domain = tha_map$pcode_num, bins = bins2)
+
+map02 <- 
+  map01 %>% 
+  addPolygons(data=tha_map, label = ~htmlEscape(ADM1_EN),
+              fillColor = ~pal2(pcode_num),
+              color = "#444444",
+              weight = 1,
+              smoothFactor = 0.5,
+              opacity = 1.0,
+              fillOpacity = 0.5,
+              group = "ADM1_EN",
+              highlightOptions = highlightOptions(color = "white",
+                                                  weight = 2,
+                                                  bringToFront = TRUE)) %>% 
+  addLayersControl(baseGroups = c("Streets", "Topomap","Imagery"),
+                   overlayGroups = c("BASIN","ADM1_EN"),
+                   options = layersControlOptions(collapsed = F, autoZIndex = T)) %>% 
+  setView(lng = 100.50551995044027, lat = 13.811329944624301,
+          zoom = 10)
+  
