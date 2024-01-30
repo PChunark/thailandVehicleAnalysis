@@ -34,8 +34,8 @@ plot <-
              scales = "free_y")+
   ThemeLine+
   theme(strip.text.x = element_text(size = 12))+
-  scale_y_continuous(breaks = seq(0,70000, 10000),
-                     limits = c(0,70000),
+  scale_y_continuous(breaks = seq(0,round(max(data$vehicle),-3), 10000),
+                     limits = c(0,round(max(data$vehicle),-3)),
                       labels = comma)+
   scale_color_manual(values = linepalette1)+
   labs(x = NULL,
@@ -69,8 +69,8 @@ plot <-
              scales = "free_y")+
   ThemeLine+
   theme(strip.text.x = element_text(size = 12))+
-  scale_y_continuous(breaks = seq(0,200, 50),
-                     limits = c(0,200),
+  scale_y_continuous(breaks = seq(0,round(max(data$vehicle),-2), 50),
+                     limits = c(0,round(max(data$vehicle),-2)),
                      labels = comma)+
   scale_color_manual(values = linepalette1)+
   labs(x = NULL,
@@ -105,8 +105,8 @@ plot <-
              scales = "free_y")+
   ThemeLine+
   theme(strip.text.x = element_text(size = 12))+
-  scale_y_continuous(breaks = seq(0,40000, 10000),
-                     limits = c(0,40000),
+  scale_y_continuous(breaks = seq(0,round(max(data$vehicle),-4), 10000),
+                     limits = c(0,round(max(data$vehicle),-4)),
                      labels = comma)+
   scale_color_manual(values = linepalette1)+
   labs(x = NULL,
@@ -141,8 +141,8 @@ plot <-
              scales = "free_y")+
   ThemeLine+
   theme(strip.text.x = element_text(size = 12))+
-  scale_y_continuous(breaks = seq(0,300, 50),
-                     limits = c(0,300),
+  scale_y_continuous(breaks = seq(0,round(max(data$vehicle),1), 50),
+                     limits = c(0,round(max(data$vehicle),1)),
                      labels = comma)+
   scale_color_manual(values = linepalette1)+
   labs(x = NULL,
@@ -177,7 +177,7 @@ plot <-
              scales = "free_y")+
   ThemeLine+
   theme(strip.text.x = element_text(size = 12))+
-  scale_y_continuous(breaks = seq(0,2500, 500),
+  scale_y_continuous(#breaks = seq(0,round(max(data$vehicle),4), 500),
                      limits = c(0,2500),
                      labels = comma)+
   scale_color_manual(values = linepalette1)+
@@ -213,8 +213,8 @@ plot <-
              scales = "free_y")+
   ThemeLine+
   theme(strip.text.x = element_text(size = 12))+
-  scale_y_continuous(breaks = seq(0,100000, 25000),
-                     limits = c(0,100000),
+  scale_y_continuous(breaks = seq(0,round(max(data$vehicle), -3), 10000),
+                     limits = c(0,round(max(data$vehicle),-3)),
                      labels = comma)+
   scale_color_manual(values = linepalette1)+
   labs(x = NULL,
