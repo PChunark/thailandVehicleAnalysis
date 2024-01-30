@@ -88,13 +88,13 @@ plot<-
         legend.box = "vertical",
         legend.position = "bottom")+
   scale_y_continuous(name = "จำนวนรถ BEV จดทะเบียนสะสม (คัน)",
-                     breaks = seq(0,100000, 20000),
-                     limits = c(0,100000),
+                     breaks = seq(0,160000, 20000),
+                     limits = c(0,160000),
                      labels = comma,
                      sec.axis = sec_axis(~./500, 
                                          name="อัตราเติบโต (% ต่อปี)",
                                          labels = label_number(suffix = "%"),
-                                         breaks = seq(0,200,25)))+
+                                         breaks = seq(0,350,25)))+
   scale_fill_manual(values = linepalette1)+
   scale_color_manual(values = linepalette1)+
   labs(x = NULL)
