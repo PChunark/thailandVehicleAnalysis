@@ -1,0 +1,50 @@
+---
+title: "Dashboard Demo"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+    social: ["twitter", "facebook", "menu"]
+    #source_code: embed # publish the source code
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(knitr)
+library(DT)
+library(rpivotTable)
+library(tidyverse)
+library(plotly)
+library(openintro)
+library(highcharter)
+library(ggvis)
+```
+
+```{r}
+getwd()
+data <- read.csv("../rawdata/dashboard/vsppadjustNE.csv")
+```
+
+```{r}
+mycolors <- c("blue", "#FFC125","darkgreen", "darkorange")
+```
+
+VSPP Demo Data Visualization
+==========================================
+
+Row
+------------------------------------------
+
+### VSPP contract capacity
+
+```{r}
+valueBox(paste("VSPP"),
+         color = "warning")
+```
+
+### Total VSPP
+
+```{r}
+valueBox(data %>% group_by(PROVINCE) %>% summarize(sum(CONTRACTED_CAP_MW)))
+```
+
