@@ -21,7 +21,6 @@ library(ggvis)
 ```
 
 ```{r}
-getwd()
 data <- read.csv("../rawdata/dashboard/vsppadjustNE.csv")
 ```
 
@@ -45,6 +44,16 @@ valueBox(paste("VSPP"),
 ### Total VSPP
 
 ```{r}
-valueBox(data %>% group_by(PROVINCE) %>% summarize(sum(CONTRACTED_CAP_MW)))
+valueBox(data %>% 
+           group_by(COUNTRY_ZONE) %>% 
+           summarize(sum(CONTRACTED_CAP_MW)) %>% 
+           mutate(across(c("sum(CONTRACTED_CAP_MW)"), round, 1)) %>% 
+           filter(COUNTRY_ZONE == 
+                    "ภาคกลางตอนบน") %>% 
+           pull(),
+         caption = "ภาคกลางตอนบน",
+         color = "info",
+         icon = "fa-comments"
+         )
 ```
 
