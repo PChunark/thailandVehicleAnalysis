@@ -44,7 +44,7 @@ b <-
                                 sheet1, 
                               # range = "A1:N52",
                                 skip = 4) %>% 
-                      pivot_longer(-ประเภทรถ,
+                      pivot_longer(-"ประเภทรถ",
                                    names_to ="category", 
                                    values_to = "unit") %>% 
                       filter(category == "ไฟฟ้า")
@@ -58,7 +58,7 @@ c<-
   file_paths %>% 
   map(function (path){
     read_excel(path, 
-               skip = 4) %>% 
+               skip = 4)}) %>% 
       set_names(., 
                 nm = map(.x = .,
                          ~excel_sheets(file_paths[1])))
@@ -74,5 +74,8 @@ d<- map(.x = excel_sheets(as.character(file_paths[1])),
 
 e <- map(
   .x = excel_sheets(as.character(file_paths[1])),
-  .f = ~ read_excel(as.character(file_paths[1]), sheet = .x, skip = 4)
-)
+  .f = ~ read_excel(as.character(file_paths[1]), sheet = .x, skip = 4) %>% select("ประเภทรถ")
+) 
+
+
+
