@@ -1,5 +1,4 @@
 library("stringr")
-library("purrr")
 library("readxl")
 library("tidyverse")
 
@@ -51,14 +50,14 @@ b <-
                     
                   })
             })
-      })
+      }, .id = files)
 
 sss <- data.frame(excel_sheets(file_paths[1]))
 c<-
   file_paths %>% 
   map(function (path){
     read_excel(path, 
-               skip = 4)}) %>% 
+               skip = 4) %>% 
       set_names(., 
                 nm = map(.x = .,
                          ~excel_sheets(file_paths[1])))
@@ -77,5 +76,4 @@ e <- map(
   .f = ~ read_excel(as.character(file_paths[1]), sheet = .x, skip = 4) %>% select("ประเภทรถ")
 ) 
 
-
-
+bb<-b %>% flatten
